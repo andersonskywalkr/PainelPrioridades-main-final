@@ -3,6 +3,10 @@ import os
 import sqlite3
 import pandas as pd
 from datetime import datetime
+<<<<<<< HEAD
+=======
+# --- CORREÇÃO: Adicionada a importação que estava faltando ---
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 import locale
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                                QHBoxLayout, QLabel, QFrame, QPushButton,
@@ -11,6 +15,7 @@ from PySide6.QtGui import QFont
 from PySide6.QtCore import Qt, QDate, QTimer
 
 # --- CONFIGURAÇÃO DE CAMINHOS ---
+<<<<<<< HEAD
 # --- ALTERAÇÃO: Lógica para usar fonte de dados local ou online ---
 USAR_LINK_ONLINE = False  # Mude para True para usar o link abaixo
 
@@ -33,12 +38,25 @@ else:
 
 NOME_ARQUIVO_BANCO_DE_DADOS = "producao.db"
 CAMINHO_BANCO_DE_DADOS = os.path.join(CAMINHO_PASTA_DADOS, NOME_ARQUIVO_BANCO_DE_DADOS)
+=======
+# O programa busca os dados no mesmo local que o painel principal
+CAMINHO_PASTA_DADOS = r"C:\Users\Admin\Documents\PainelPrioridades-main-main\dados"
+NOME_ARQUIVO_BANCO_DE_DADOS = "producao.db"
+CAMINHO_BANCO_DE_DADOS = os.path.join(CAMINHO_PASTA_DADOS, NOME_ARQUIVO_BANCO_DE_DADOS)
+# --- NOVO: Caminho para a planilha de status para buscar o backlog ---
+NOME_ARQUIVO_STATUS = "Status_dos_pedidos.xlsm"
+CAMINHO_PLANILHA_STATUS = os.path.join(CAMINHO_PASTA_DADOS, NOME_ARQUIVO_STATUS)
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 
 
 # --- ESTILO VISUAL (Reutilizado do painel principal) ---
 STYLESHEET = """
     QMainWindow { background-color: #1C1C1C; } 
+<<<<<<< HEAD
     QLabel { color: #E0E0E0; font-family: Inter; }
+=======
+    QLabel { color: #E0E0E0; }
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
     #Header { background-color: #2E2E2E; border-bottom: 2px solid #FF6600; }
     #LogoLabel { padding: 5px; } 
     .SectionTitle { 
@@ -54,12 +72,18 @@ STYLESHEET = """
         border-radius: 4px;
         padding: 5px;
         font-size: 14px;
+<<<<<<< HEAD
         font-family: Inter;
+=======
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
     }
     QCalendarWidget {
         background-color: #2E2E2E;
         color: #E0E0E0;
+<<<<<<< HEAD
         font-family: Inter;
+=======
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
     }
     QTextEdit {
         background-color: #252525;
@@ -67,7 +91,10 @@ STYLESHEET = """
         border: 1px solid #555;
         border-radius: 4px;
         font-size: 14px;
+<<<<<<< HEAD
         font-family: Inter;
+=======
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         padding: 10px;
     }
     QPushButton {
@@ -78,7 +105,10 @@ STYLESHEET = """
         border-radius: 4px; 
         font-weight: bold;
         font-size: 14px;
+<<<<<<< HEAD
         font-family: Inter;
+=======
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
     }
     QPushButton:hover { background-color: #2980B9; }
     #CopyButton { background-color: #27AE60; }
@@ -89,7 +119,11 @@ class GeradorRelatorios(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Gerador de Relatórios MTEC")
+<<<<<<< HEAD
         self.setGeometry(200, 200, 700, 550)
+=======
+        self.setGeometry(200, 200, 700, 500)
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         self.setStyleSheet(STYLESHEET)
         self.setup_ui()
 
@@ -151,7 +185,11 @@ class GeradorRelatorios(QMainWindow):
 
         self.report_text_edit = QTextEdit()
         self.report_text_edit.setReadOnly(True)
+<<<<<<< HEAD
         body_layout.addWidget(self.report_text_edit, 1)
+=======
+        body_layout.addWidget(self.report_text_edit, 1) # O 1 faz com que ele expanda
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 
         # --- Botão de Copiar ---
         self.copy_button = QPushButton("Copiar Texto")
@@ -177,6 +215,7 @@ class GeradorRelatorios(QMainWindow):
         except Exception as e:
             return None, f"Erro ao conectar ou ler o banco de dados: {e}"
 
+<<<<<<< HEAD
     def buscar_dados_backlog(self):
         """Busca todos os pedidos com status 'Aguardando Montagem' ou 'Em Montagem'."""
         try:
@@ -189,6 +228,31 @@ class GeradorRelatorios(QMainWindow):
             df_backlog = df[df['Status'].isin(status_backlog)].copy()
             
             return df_backlog, None
+=======
+    # --- NOVO: Função para buscar o backlog da planilha de status ---
+    def buscar_dados_backlog(self):
+        """Busca as próximas 3 prioridades da planilha de status."""
+        if not os.path.exists(CAMINHO_PLANILHA_STATUS):
+            return None, "Erro: Planilha 'Status_dos_pedidos.xlsm' não encontrada."
+        
+        try:
+            with open(CAMINHO_PLANILHA_STATUS, 'rb') as f:
+                df = pd.read_excel(f, engine='openpyxl')
+
+            df.columns = df.columns.str.strip()
+            
+            # Filtra apenas os pedidos que estão na fila de produção
+            status_nao_concluidos = ['Concluído', 'Cancelado']
+            df_principal = df[~df['Status'].isin(status_nao_concluidos)].copy()
+
+            # Aplica a mesma lógica de priorização do painel principal
+            df_principal['is_urgent'] = df_principal['Status'].str.strip().str.lower() == 'urgente'
+            df_principal.reset_index(inplace=True) 
+            df_principal.sort_values(by=['is_urgent', 'index'], ascending=[False, True], inplace=True)
+            
+            # Retorna as 3 primeiras prioridades
+            return df_principal.head(3), None
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         except Exception as e:
             return None, f"Erro ao ler a planilha de status: {e}"
 
@@ -207,6 +271,10 @@ class GeradorRelatorios(QMainWindow):
             self.report_text_edit.setText(error_backlog)
             return
         
+<<<<<<< HEAD
+=======
+        # --- Lógica de sumarização dos dados concluídos ---
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         atividades_realizadas = []
         if not df_concluidos.empty:
             df_concluidos['pv'] = df_concluidos['pv'].astype(str)
@@ -225,6 +293,10 @@ class GeradorRelatorios(QMainWindow):
                 plural_op = "'s" if num_ops > 1 else ""
                 atividades_realizadas.append(f"• {num_ops} OP{plural_op} com {unidades_ops} unidades de Teravix")
         
+<<<<<<< HEAD
+=======
+        # --- Lógica de sumarização do backlog ---
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         atividades_backlog = []
         if not df_backlog.empty:
             df_backlog['PV'] = df_backlog['PV'].astype(str)
@@ -243,6 +315,10 @@ class GeradorRelatorios(QMainWindow):
                 plural_op = "'s" if num_ops_backlog > 1 else ""
                 atividades_backlog.append(f"• {num_ops_backlog} OP{plural_op} com {unidades_ops_backlog} unidades de Teravix")
 
+<<<<<<< HEAD
+=======
+        # --- Formatação do texto final do relatório ---
+>>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         dias_semana = {
             'Monday': 'Segunda-feira', 'Tuesday': 'Terça-feira', 'Wednesday': 'Quarta-feira',
             'Thursday': 'Quinta-feira', 'Friday': 'Sexta-feira', 'Saturday': 'Sábado', 'Sunday': 'Domingo'
