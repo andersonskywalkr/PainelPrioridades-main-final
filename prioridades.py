@@ -18,11 +18,7 @@ from watchdog.events import FileSystemEventHandler
 # --- CONFIGURAÇÃO GERAL E DE DADOS ---
 
 # Fator de escala ajustado para um layout mais compacto.
-<<<<<<< HEAD
 SCALE_FACTOR = 1.0
-=======
-SCALE_FACTOR = 1.4
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 
 META_SEMANAL = 500
 
@@ -36,7 +32,6 @@ FRASES_MOTIVACIONAIS = [
 
 FRASE_DO_DIA_ATUAL = ""; ULTIMO_DIA_FRASE = None
 
-<<<<<<< HEAD
 # --- ALTERAÇÃO: Configuração de Fonte de Dados ---
 # Mude para True para usar o link online ou False para usar o arquivo local.
 USAR_LINK_ONLINE = False  # Mude para True para usar o link abaixo
@@ -64,20 +59,10 @@ else:
 
 NOME_ARQUIVO_BANCO_DE_DADOS = "producao.db"
 CAMINHO_BANCO_DE_DADOS = os.path.join(CAMINHO_PASTA_DADOS, NOME_ARQUIVO_BANCO_DE_DADOS)
-=======
-CAMINHO_PASTA_EXCEL = r"C:\Users\Admin\Documents\PainelPrioridades-main-main\dados"
-
-NOME_ARQUIVO_STATUS = "Status_dos_pedidos.xlsm"
-CAMINHO_PLANILHA_STATUS = os.path.join(CAMINHO_PASTA_EXCEL, NOME_ARQUIVO_STATUS)
-
-NOME_ARQUIVO_BANCO_DE_DADOS = "producao.db"
-CAMINHO_BANCO_DE_DADOS = os.path.join(CAMINHO_PASTA_EXCEL, NOME_ARQUIVO_BANCO_DE_DADOS)
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 
 COLUNA_PEDIDO_ID, COLUNA_PV, COLUNA_SERVICO, COLUNA_STATUS, COLUNA_DATA_STATUS, COLUNA_QTD, COLUNA_EQUIPAMENTO = 'Pedido', 'PV', 'Servico', 'Status', 'Data Status', 'Qtd Maquinas', 'Equipamento'
 STATUS_PENDENTE, STATUS_AGUARDANDO, STATUS_AGUARDANDO_CHEGADA, STATUS_EM_MONTAGEM, STATUS_CONCLUIDO, STATUS_CANCELADO, STATUS_URGENTE = 'Pendente', 'Aguardando Montagem', 'Aguardando Chegada', 'Em Montagem', 'Concluído', 'Cancelado', 'Urgente'
 
-<<<<<<< HEAD
 # --- LÓGICA DE DADOS ---
 def carregar_dados():
     print(f"Carregando dados de: {CAMINHO_PLANILHA_STATUS}")
@@ -86,21 +71,6 @@ def carregar_dados():
         df = pd.read_excel(CAMINHO_PLANILHA_STATUS, engine='openpyxl', parse_dates=[COLUNA_DATA_STATUS])
     except Exception as e:
         raise Exception(f"Não foi possível carregar a planilha. Verifique o caminho ou o link.\nErro: {e}")
-=======
-# --- LÓGICA DE DADOS (sem alterações) ---
-def carregar_dados():
-    if not os.path.exists(CAMINHO_PLANILHA_STATUS):
-        raise FileNotFoundError(f"Arquivo de dados não encontrado: {CAMINHO_PLANILHA_STATUS}")
-
-    try:
-        with open(CAMINHO_PLANILHA_STATUS, 'rb') as f:
-            df = pd.read_excel(f, engine='openpyxl', parse_dates=[COLUNA_DATA_STATUS])
-    except PermissionError:
-        print(f"Aviso: Permissão negada para ler {CAMINHO_PLANILHA_STATUS}. Tentando novamente...")
-        time.sleep(1)
-        with open(CAMINHO_PLANILHA_STATUS, 'rb') as f:
-            df = pd.read_excel(f, engine='openpyxl', parse_dates=[COLUNA_DATA_STATUS])
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 
     df.columns = df.columns.str.strip()
 
@@ -116,13 +86,8 @@ def carregar_dados():
 
     df_principal = df[~df[COLUNA_STATUS].isin([STATUS_CONCLUIDO, STATUS_CANCELADO])].copy()
     hoje = datetime.now().date()
-<<<<<<< HEAD
     df_concluidos_hoje = df[(df[COLUNA_STATUS] == STATUS_CONCLUIDO) & (pd.to_datetime(df[COLUNA_DATA_STATUS], errors='coerce').dt.date == hoje)].sort_values(by=COLUNA_DATA_STATUS, ascending=False)
     df_cancelados_hoje = df[(df[COLUNA_STATUS] == STATUS_CANCELADO) & (pd.to_datetime(df[COLUNA_DATA_STATUS], errors='coerce').dt.date == hoje)].sort_values(by=COLUNA_DATA_STATUS, ascending=False)
-=======
-    df_concluidos_hoje = df[(df[COLUNA_STATUS] == STATUS_CONCLUIDO) & (pd.to_datetime(df[COLUNA_DATA_STATUS]).dt.date == hoje)].sort_values(by=COLUNA_DATA_STATUS, ascending=False)
-    df_cancelados_hoje = df[(df[COLUNA_STATUS] == STATUS_CANCELADO) & (pd.to_datetime(df[COLUNA_DATA_STATUS]).dt.date == hoje)].sort_values(by=COLUNA_DATA_STATUS, ascending=False)
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 
     if not df_principal.empty:
         df_principal['is_urgent'] = df_principal[COLUNA_STATUS].str.strip().str.lower() == STATUS_URGENTE.lower()
@@ -152,10 +117,6 @@ def carregar_dados():
            (teravix_concluidos, pv_concluidos, total_concluidos, teravix_concluidos_qtd, pv_concluidos_qtd, total_concluidos_qtd), \
            (teravix_cancelados, pv_cancelados, total_cancelados, teravix_cancelados_qtd, pv_cancelados_qtd, total_cancelados_qtd)
 
-<<<<<<< HEAD
-# ... (O restante das funções de lógica de dados permanece igual) ...
-=======
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 def obter_frase_do_dia():
     global FRASE_DO_DIA_ATUAL, ULTIMO_DIA_FRASE
     hoje = datetime.now().date()
@@ -238,15 +199,6 @@ STYLESHEET = f"""
     QProgressBar {{ border: 1px solid #555; border-radius: 5px; text-align: center; background-color: #2E2E2E; }}
     QProgressBar::chunk {{ background-color: #FF6600; border-radius: 4px; }}
     QProgressBar#currentWeek::chunk {{ background-color: #FFAA33; }}
-<<<<<<< HEAD
-=======
-    #SyncButton {{
-        background-color: #8E44AD; color: white; border: none;
-        padding: 5px 10px; border-radius: 4px; font-weight: bold;
-    }}
-    #SyncButton:hover {{ background-color: #7D3C98; }}
-    #SyncButton:pressed {{ background-color: #6C3483; }}
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
     #NotificationLabel {{
         background-color: #2ECC71; color: white; border-radius: 5px;
         padding: 10px; font-weight: bold; font-size: {int(16 * SCALE_FACTOR)}px;
@@ -264,7 +216,6 @@ class PainelMtec(QMainWindow):
         
         self.main_container = QWidget(); self.error_container = QWidget(); self.is_showing_error = False
 
-<<<<<<< HEAD
         # --- CORREÇÃO: A UI é criada ANTES de qualquer função que possa mostrar um erro ---
         self.setup_ui()
         self.inicializar_banco_de_dados()
@@ -274,12 +225,6 @@ class PainelMtec(QMainWindow):
         else:
             self.setup_file_watcher()
             
-=======
-        self.inicializar_banco_de_dados()
-
-        self.setup_ui()
-        self.setup_file_watcher()
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         self.atualizar_dados_e_ui()
 
     def scale(self, size):
@@ -288,12 +233,8 @@ class PainelMtec(QMainWindow):
 
     def inicializar_banco_de_dados(self):
         try:
-<<<<<<< HEAD
             # --- CORREÇÃO: Usa a variável correta para o caminho ---
             os.makedirs(CAMINHO_PASTA_DADOS, exist_ok=True)
-=======
-            os.makedirs(CAMINHO_PASTA_EXCEL, exist_ok=True)
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
             print(f"Verificando/Criando banco de dados em: {CAMINHO_BANCO_DE_DADOS}")
             conexao = sqlite3.connect(CAMINHO_BANCO_DE_DADOS)
             cursor = conexao.cursor()
@@ -373,16 +314,11 @@ class PainelMtec(QMainWindow):
         self.dashboard_layout.addLayout(self.metricas_layout, 1); self.dashboard_layout.addLayout(self.grafico_layout, 2); self.dashboard_layout.addStretch(1); self.dashboard_layout.addLayout(self.kpi_layout, 1)
 
     def setup_file_watcher(self):
-<<<<<<< HEAD
         os.makedirs(CAMINHO_PASTA_DADOS, exist_ok=True)
-=======
-        os.makedirs(CAMINHO_PASTA_EXCEL, exist_ok=True)
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         self.signal_emitter = SignalEmitter()
         self.signal_emitter.file_changed.connect(self.atualizar_dados_e_ui)
         event_handler = FileChangeHandler(self.signal_emitter)
         self.observer = Observer()
-<<<<<<< HEAD
         self.observer.schedule(event_handler, path=CAMINHO_PASTA_DADOS, recursive=False)
         self.observer.start()
         print(f"Monitorando a pasta '{CAMINHO_PASTA_DADOS}' por mudanças...")
@@ -393,24 +329,16 @@ class PainelMtec(QMainWindow):
         self.update_timer.timeout.connect(self.atualizar_dados_e_ui)
         self.update_timer.start(300000) # 300000 ms = 5 minutos
         print("Modo online: O painel será atualizado a cada 5 minutos.")
-=======
-        self.observer.schedule(event_handler, path=CAMINHO_PASTA_EXCEL, recursive=False)
-        self.observer.start()
-        print(f"Monitorando a pasta '{CAMINHO_PASTA_EXCEL}' por mudanças...")
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 
 
     def atualizar_dados_e_ui(self):
         print("Atualizando dados e UI...")
         try:
             time.sleep(0.5)
-<<<<<<< HEAD
             
             if not USAR_LINK_ONLINE:
                 self.sincronizar_banco_de_dados()
 
-=======
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
             df_full, df_principal, df_concluidos, df_cancelados, totais_concluidos, totais_cancelados = carregar_dados()
             
             if self.is_showing_error: self.clear_error_message()
@@ -424,7 +352,6 @@ class PainelMtec(QMainWindow):
         except Exception as e:
             self.mostrar_erro(str(e))
 
-<<<<<<< HEAD
     def sincronizar_banco_de_dados(self):
         """
         Sincroniza o banco de dados com a planilha de status.
@@ -480,85 +407,6 @@ class PainelMtec(QMainWindow):
         except Exception as e:
             print(f"ERRO CRÍTICO DURANTE A SINCRONIZAÇÃO DO BANCO DE DADOS: {e}")
 
-=======
-
-    def salvar_concluidos_db(self, df_concluidos):
-        if df_concluidos.empty:
-            msg = "Nenhum pedido concluído para salvar."
-            print(f"INFO: {msg}")
-            return True, msg
-
-        try:
-            conexao = sqlite3.connect(CAMINHO_BANCO_DE_DADOS)
-            cursor = conexao.cursor()
-            
-            pedidos_adicionados = 0
-            for _, row in df_concluidos.iterrows():
-                cursor.execute('''
-                    INSERT OR IGNORE INTO concluidos (data_conclusao, pedido_id, pv, qtd_maquinas, equipamento, servico)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ''', (
-                    row[COLUNA_DATA_STATUS].strftime('%Y-%m-%d %H:%M:%S'),
-                    row[COLUNA_PEDIDO_ID],
-                    row[COLUNA_PV],
-                    row[COLUNA_QTD],
-                    row[COLUNA_EQUIPAMENTO],
-                    row[COLUNA_SERVICO]
-                ))
-                if cursor.rowcount > 0:
-                    pedidos_adicionados += 1
-
-            conexao.commit()
-            conexao.close()
-
-            if pedidos_adicionados > 0:
-                msg = f"{pedidos_adicionados} novo(s) pedido(s) salvo(s) com sucesso!"
-            else:
-                msg = "Banco de dados já está atualizado. Nenhum pedido novo adicionado."
-            
-            print(f"SUCESSO: {msg}")
-            return True, msg
-
-        except sqlite3.OperationalError as e:
-            msg = f"Erro de Banco de Dados: {e}. Pode estar bloqueado."
-            print(f"ERRO: {msg}")
-            return False, msg
-        except Exception as e:
-            msg = f"Erro inesperado ao salvar: {e}"
-            print(f"ERRO CRÍTICO: {msg}")
-            return False, msg
-
-    def on_sync_history_clicked(self):
-        print("\n*** Sincronização de histórico solicitada ***")
-        try:
-            with open(CAMINHO_PLANILHA_STATUS, 'rb') as f:
-                df_full = pd.read_excel(f, engine='openpyxl', parse_dates=[COLUNA_DATA_STATUS])
-            
-            df_full['temp_date'] = pd.to_datetime(df_full[COLUNA_DATA_STATUS], errors='coerce')
-            
-            df_full.dropna(subset=['temp_date'], inplace=True)
-
-            start_date = (datetime.now() - timedelta(days=30)).replace(hour=0, minute=0, second=0, microsecond=0)
-            
-            df_historico = df_full[
-                (df_full[COLUNA_STATUS] == STATUS_CONCLUIDO) & 
-                (df_full['temp_date'].dt.normalize() >= start_date)
-            ].copy()
-
-            print(f"INFO: Encontrados {len(df_historico)} pedidos concluídos nos últimos 30 dias na planilha.")
-
-            if df_historico.empty:
-                self.show_notification("Nenhum pedido concluído encontrado nos últimos 30 dias.", is_error=False)
-                return
-
-            success, message = self.salvar_concluidos_db(df_historico)
-            self.show_notification(message, is_error=not success)
-
-        except Exception as e:
-            msg = f"Erro ao sincronizar histórico: {e}"
-            print(f"ERRO CRÍTICO: {msg}")
-            self.show_notification(msg, is_error=True)
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 
     def show_notification(self, message, is_error=False):
         self.notification_label.setText(message)
@@ -650,25 +498,8 @@ class PainelMtec(QMainWindow):
         
         self.metricas_layout.addWidget(total_mes_titulo); self.metricas_layout.addWidget(total_mes_valor); self.metricas_layout.addStretch(1); self.metricas_layout.addWidget(media_diaria_titulo); self.metricas_layout.addWidget(media_diaria_valor); self.metricas_layout.addStretch(1)
 
-<<<<<<< HEAD
         titulo_grafico = QLabel(f"Desempenho Semanal (Meta: {META_SEMANAL} máq.)"); titulo_grafico.setFont(titulo_metrica_font)
         self.grafico_layout.addWidget(titulo_grafico)
-=======
-        titulo_grafico_layout = QHBoxLayout()
-        titulo_grafico = QLabel(f"Desempenho Semanal (Meta: {META_SEMANAL} máq.)"); titulo_grafico.setFont(titulo_metrica_font)
-        titulo_grafico_layout.addWidget(titulo_grafico)
-        titulo_grafico_layout.addStretch()
-
-        sync_button = QPushButton("Sincronizar Histórico")
-        sync_button.setObjectName("SyncButton")
-        sync_button.setFixedSize(self.scale(140), self.scale(28))
-        sync_button.setFont(QFont("Inter", self.scale(9), QFont.Bold))
-        sync_button.setToolTip("Busca e salva no banco de dados todos os pedidos concluídos\nnos últimos 30 dias a partir da planilha principal.")
-        sync_button.clicked.connect(self.on_sync_history_clicked)
-        titulo_grafico_layout.addWidget(sync_button)
-
-        self.grafico_layout.addLayout(titulo_grafico_layout)
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
 
         start_of_current_week = datetime.now().date() - timedelta(days=datetime.now().weekday())
         for data, valor in dados_grafico:
@@ -730,11 +561,6 @@ class PainelMtec(QMainWindow):
         layout = QVBoxLayout(card)
         layout.setSpacing(self.scale(6))
 
-<<<<<<< HEAD
-=======
-        # [ALTERADO] O título agora usa HTML para permitir diferentes tamanhos de fonte na mesma linha.
-        # Isso diminui especificamente a parte "CV-XXXXX".
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         pos_priority_html = f"<b>{pos_lista}º (P{data['Prioridade']}):</b>"
         cv_html = f"<span style='font-size:{self.scale(10)}pt; font-weight:bold;'> {data[COLUNA_PEDIDO_ID]}</span>"
         pv_html = f"<span style='font-weight:bold;'> ({data[COLUNA_PV]})</span>"
@@ -743,12 +569,7 @@ class PainelMtec(QMainWindow):
 
         titulo = QLabel(titulo_texto)
         titulo.setObjectName("CardTitle")
-<<<<<<< HEAD
         titulo.setFont(QFont("Inter", self.scale(12)))
-=======
-        # A fonte base é definida aqui, mas o HTML acima a substitui para partes específicas.
-        titulo.setFont(QFont("Inter", self.scale(12))) # Apenas a fonte base, sem negrito aqui.
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         titulo.setWordWrap(True)
 
         status_text = str(data.get(COLUNA_STATUS, 'N/A')).upper()
@@ -819,15 +640,9 @@ class PainelMtec(QMainWindow):
 
     def closeEvent(self, event):
         print("Fechando a aplicação e parando o monitoramento de arquivos.")
-<<<<<<< HEAD
-        # --- ALTERAÇÃO: Garante que o observer seja parado apenas se existir ---
         if not USAR_LINK_ONLINE:
             self.observer.stop()
             self.observer.join()
-=======
-        self.observer.stop()
-        self.observer.join()
->>>>>>> 72226c98df39d3f8c496632134820ecb4455640f
         super().closeEvent(event)
 
     def keyPressEvent(self, event):
