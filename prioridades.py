@@ -21,7 +21,6 @@ from watchdog.events import FileSystemEventHandler
 SCALE_FACTOR = 1.0
 
 META_SEMANAL = 500
-
 FRASES_MOTIVACIONAIS = [
     "A qualidade do nosso trabalho hoje é a garantia do nosso sucesso amanhã.", "O único lugar onde o sucesso vem antes do trabalho é no dicionário.",
     "Grandes coisas em negócios nunca são feitas por uma pessoa. São feitas por uma equipe.", "A persistência realiza o impossível.",
@@ -31,7 +30,6 @@ FRASES_MOTIVACIONAIS = [
 ]
 
 FRASE_DO_DIA_ATUAL = ""; ULTIMO_DIA_FRASE = None
-
 # --- ALTERAÇÃO: Configuração de Fonte de Dados ---
 # Mude para True para usar o link online ou False para usar o arquivo local.
 USAR_LINK_ONLINE = False  # Mude para True para usar o link abaixo
